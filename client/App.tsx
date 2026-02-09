@@ -34,23 +34,48 @@ const App = () => (
             {/* Placeholder routes for features in development */}
             <Route
               path="/admin/students"
-              element={<Placeholder title="Student Management" description="Manage and view student records" />}
+              element={
+                <Placeholder
+                  title="Student Management"
+                  description="Manage and view student records"
+                />
+              }
             />
             <Route
               path="/admin/faculty"
-              element={<Placeholder title="Faculty Management" description="Manage and view faculty records" />}
+              element={
+                <Placeholder
+                  title="Faculty Management"
+                  description="Manage and view faculty records"
+                />
+              }
             />
             <Route
               path="/admin/schedule"
-              element={<Placeholder title="Academic Scheduling" description="Create and manage timetables and exams" />}
+              element={
+                <Placeholder
+                  title="Academic Scheduling"
+                  description="Create and manage timetables and exams"
+                />
+              }
             />
             <Route
               path="/faculty/courses"
-              element={<Placeholder title="Manage Courses" description="Edit and configure your courses" />}
+              element={
+                <Placeholder
+                  title="Manage Courses"
+                  description="Edit and configure your courses"
+                />
+              }
             />
             <Route
               path="/student/progress"
-              element={<Placeholder title="Academic Progress" description="View your detailed academic progress and analytics" />}
+              element={
+                <Placeholder
+                  title="Academic Progress"
+                  description="View your detailed academic progress and analytics"
+                />
+              }
             />
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

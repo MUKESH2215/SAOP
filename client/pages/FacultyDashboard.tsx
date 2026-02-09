@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { BookOpen, FileText, Users, Clock, MessageSquare, Upload, CheckCircle, Plus } from "lucide-react";
+import {
+  BookOpen,
+  FileText,
+  Users,
+  Clock,
+  MessageSquare,
+  Upload,
+  CheckCircle,
+  Plus,
+} from "lucide-react";
 
 export default function FacultyDashboard() {
   const [activeTab, setActiveTab] = useState("courses");
@@ -67,10 +76,30 @@ export default function FacultyDashboard() {
   ];
 
   const stats = [
-    { icon: BookOpen, label: "Active Courses", value: courses.length, color: "bg-primary/10 text-primary" },
-    { icon: Users, label: "Total Students", value: courses.reduce((sum, c) => sum + c.students, 0), color: "bg-accent/10 text-accent" },
-    { icon: FileText, label: "Pending Submissions", value: 28, color: "bg-blue-500/10 text-blue-500" },
-    { icon: CheckCircle, label: "Graded", value: 142, color: "bg-green-500/10 text-green-500" },
+    {
+      icon: BookOpen,
+      label: "Active Courses",
+      value: courses.length,
+      color: "bg-primary/10 text-primary",
+    },
+    {
+      icon: Users,
+      label: "Total Students",
+      value: courses.reduce((sum, c) => sum + c.students, 0),
+      color: "bg-accent/10 text-accent",
+    },
+    {
+      icon: FileText,
+      label: "Pending Submissions",
+      value: 28,
+      color: "bg-blue-500/10 text-blue-500",
+    },
+    {
+      icon: CheckCircle,
+      label: "Graded",
+      value: 142,
+      color: "bg-green-500/10 text-green-500",
+    },
   ];
 
   return (
@@ -178,7 +207,9 @@ export default function FacultyDashboard() {
                         <div className="text-xs text-muted-foreground">
                           Assignments
                         </div>
-                        <div className="font-semibold">{course.assignments}</div>
+                        <div className="font-semibold">
+                          {course.assignments}
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -187,7 +218,9 @@ export default function FacultyDashboard() {
                         <div className="text-xs text-muted-foreground">
                           Submissions
                         </div>
-                        <div className="font-semibold">{course.submissions}</div>
+                        <div className="font-semibold">
+                          {course.submissions}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -220,9 +253,7 @@ export default function FacultyDashboard() {
                           : "bg-blue-100 text-blue-800"
                       }`}
                     >
-                      {submission.status === "graded"
-                        ? "Graded"
-                        : "Submitted"}
+                      {submission.status === "graded" ? "Graded" : "Submitted"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
@@ -246,8 +277,8 @@ export default function FacultyDashboard() {
                 Upload Course Materials
               </h3>
               <p className="text-muted-foreground mb-6">
-                Upload lecture notes, presentations, and other course materials for your
-                students.
+                Upload lecture notes, presentations, and other course materials
+                for your students.
               </p>
               <div className="border-2 border-dashed border-primary/30 rounded-lg p-8 text-center hover:border-primary/60 transition-colors cursor-pointer">
                 <Upload className="w-12 h-12 text-primary/50 mx-auto mb-4" />

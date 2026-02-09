@@ -17,18 +17,27 @@ export default function Layout() {
       <header className="sticky top-0 z-50 w-full bg-white border-b border-border shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link to="/" className="flex items-center gap-2 font-bold text-xl text-primary hover:text-primary/90">
+            <Link
+              to="/"
+              className="flex items-center gap-2 font-bold text-xl text-primary hover:text-primary/90"
+            >
               <Leaf className="w-6 h-6" />
               <span>SAOP</span>
             </Link>
-            
+
             <nav className="hidden md:flex items-center gap-6">
               {!isDashboard && (
                 <>
-                  <Link to="/" className="text-sm font-medium hover:text-primary">
+                  <Link
+                    to="/"
+                    className="text-sm font-medium hover:text-primary"
+                  >
                     Home
                   </Link>
-                  <Link to="/login" className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90">
+                  <Link
+                    to="/login"
+                    className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90"
+                  >
                     Sign In
                   </Link>
                 </>
@@ -89,30 +98,69 @@ export default function Layout() {
               <div>
                 <h4 className="font-semibold mb-3">Features</h4>
                 <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li><Link to="/" className="hover:text-primary">Overview</Link></li>
-                  <li><a href="#" className="hover:text-primary">Documentation</a></li>
-                  <li><a href="#" className="hover:text-primary">API</a></li>
+                  <li>
+                    <Link to="/" className="hover:text-primary">
+                      Overview
+                    </Link>
+                  </li>
+                  <li>
+                    <a href="#" className="hover:text-primary">
+                      Documentation
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="hover:text-primary">
+                      API
+                    </a>
+                  </li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-semibold mb-3">Resources</h4>
                 <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li><a href="#" className="hover:text-primary">Blog</a></li>
-                  <li><a href="#" className="hover:text-primary">Community</a></li>
-                  <li><a href="#" className="hover:text-primary">Support</a></li>
+                  <li>
+                    <a href="#" className="hover:text-primary">
+                      Blog
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="hover:text-primary">
+                      Community
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="hover:text-primary">
+                      Support
+                    </a>
+                  </li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-semibold mb-3">Legal</h4>
                 <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li><a href="#" className="hover:text-primary">Privacy</a></li>
-                  <li><a href="#" className="hover:text-primary">Terms</a></li>
-                  <li><a href="#" className="hover:text-primary">Contact</a></li>
+                  <li>
+                    <a href="#" className="hover:text-primary">
+                      Privacy
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="hover:text-primary">
+                      Terms
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="hover:text-primary">
+                      Contact
+                    </a>
+                  </li>
                 </ul>
               </div>
             </div>
             <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-              <p>&copy; 2024 Sustainable Academic Operations Platform. All rights reserved.</p>
+              <p>
+                &copy; 2024 Sustainable Academic Operations Platform. All rights
+                reserved.
+              </p>
             </div>
           </div>
         </footer>

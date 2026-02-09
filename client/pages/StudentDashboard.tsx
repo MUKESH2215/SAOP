@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { BookOpen, Calendar, FileText, BarChart3, Clock, CheckCircle, AlertCircle, Download } from "lucide-react";
+import {
+  BookOpen,
+  Calendar,
+  FileText,
+  BarChart3,
+  Clock,
+  CheckCircle,
+  AlertCircle,
+  Download,
+} from "lucide-react";
 
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState("courses");
@@ -116,10 +125,30 @@ export default function StudentDashboard() {
   ];
 
   const stats = [
-    { icon: BookOpen, label: "Enrolled Courses", value: enrolledCourses.length, color: "bg-primary/10 text-primary" },
-    { icon: FileText, label: "Pending Assignments", value: 2, color: "bg-orange-500/10 text-orange-500" },
-    { icon: CheckCircle, label: "Completed", value: 18, color: "bg-green-500/10 text-green-500" },
-    { icon: BarChart3, label: "GPA", value: "3.85", color: "bg-accent/10 text-accent" },
+    {
+      icon: BookOpen,
+      label: "Enrolled Courses",
+      value: enrolledCourses.length,
+      color: "bg-primary/10 text-primary",
+    },
+    {
+      icon: FileText,
+      label: "Pending Assignments",
+      value: 2,
+      color: "bg-orange-500/10 text-orange-500",
+    },
+    {
+      icon: CheckCircle,
+      label: "Completed",
+      value: 18,
+      color: "bg-green-500/10 text-green-500",
+    },
+    {
+      icon: BarChart3,
+      label: "GPA",
+      value: "3.85",
+      color: "bg-accent/10 text-accent",
+    },
   ];
 
   return (
@@ -209,13 +238,17 @@ export default function StudentDashboard() {
                       <div className="text-3xl font-bold text-accent mb-1">
                         {course.grade}
                       </div>
-                      <div className="text-xs text-muted-foreground">Current Grade</div>
+                      <div className="text-xs text-muted-foreground">
+                        Current Grade
+                      </div>
                     </div>
                   </div>
 
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-medium">Course Progress</span>
+                      <span className="text-xs font-medium">
+                        Course Progress
+                      </span>
                       <span className="text-xs text-muted-foreground">
                         {course.progress}%
                       </span>
@@ -246,8 +279,8 @@ export default function StudentDashboard() {
                     assignment.status === "submitted"
                       ? "bg-green-50 border-green-200"
                       : assignment.daysLeft <= 2
-                      ? "bg-orange-50 border-orange-200"
-                      : "bg-white border-border"
+                        ? "bg-orange-50 border-orange-200"
+                        : "bg-white border-border"
                   } hover:shadow-md transition-shadow`}
                 >
                   <div className="flex items-start justify-between">
@@ -259,9 +292,10 @@ export default function StudentDashboard() {
                         {assignment.status === "submitted" && (
                           <CheckCircle className="w-4 h-4 text-green-600" />
                         )}
-                        {assignment.daysLeft <= 2 && assignment.status !== "submitted" && (
-                          <AlertCircle className="w-4 h-4 text-orange-600" />
-                        )}
+                        {assignment.daysLeft <= 2 &&
+                          assignment.status !== "submitted" && (
+                            <AlertCircle className="w-4 h-4 text-orange-600" />
+                          )}
                       </div>
                       <h3 className="font-semibold text-foreground mb-1">
                         {assignment.title}

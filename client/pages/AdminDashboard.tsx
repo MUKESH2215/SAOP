@@ -17,10 +17,30 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
 
   const stats = [
-    { icon: Users, label: "Total Students", value: "3,245", color: "bg-primary/10 text-primary" },
-    { icon: GraduationCap, label: "Faculty Members", value: "287", color: "bg-accent/10 text-accent" },
-    { icon: BookOpen, label: "Active Courses", value: "156", color: "bg-blue-500/10 text-blue-500" },
-    { icon: Leaf, label: "Papers Saved", value: "45.2K", color: "bg-green-500/10 text-green-500" },
+    {
+      icon: Users,
+      label: "Total Students",
+      value: "3,245",
+      color: "bg-primary/10 text-primary",
+    },
+    {
+      icon: GraduationCap,
+      label: "Faculty Members",
+      value: "287",
+      color: "bg-accent/10 text-accent",
+    },
+    {
+      icon: BookOpen,
+      label: "Active Courses",
+      value: "156",
+      color: "bg-blue-500/10 text-blue-500",
+    },
+    {
+      icon: Leaf,
+      label: "Papers Saved",
+      value: "45.2K",
+      color: "bg-green-500/10 text-green-500",
+    },
   ];
 
   const recentActivities = [
@@ -195,7 +215,8 @@ export default function AdminDashboard() {
                   Student Management
                 </h3>
                 <p className="text-muted-foreground mb-4">
-                  Add, update, and view student records. Import bulk data from CSV files.
+                  Add, update, and view student records. Import bulk data from
+                  CSV files.
                 </p>
                 <button className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90">
                   Manage Students
@@ -225,8 +246,8 @@ export default function AdminDashboard() {
                 Academic Scheduling
               </h3>
               <p className="text-muted-foreground mb-4">
-                Create optimized timetables and exam schedules to minimize resource usage
-                and conflicts.
+                Create optimized timetables and exam schedules to minimize
+                resource usage and conflicts.
               </p>
               <div className="mt-4 p-4 bg-muted/30 rounded-lg text-center text-muted-foreground">
                 <p>Scheduling features - detailed interface coming soon</p>
@@ -242,8 +263,8 @@ export default function AdminDashboard() {
                 Analytics & Reports
               </h3>
               <p className="text-muted-foreground mb-4">
-                Generate comprehensive reports on academic operations and sustainability
-                metrics.
+                Generate comprehensive reports on academic operations and
+                sustainability metrics.
               </p>
               <div className="mt-4 p-4 bg-muted/30 rounded-lg text-center text-muted-foreground">
                 <p>Reports interface - detailed analytics coming soon</p>

@@ -1,7 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { Leaf, Mail, Lock, ArrowRight, Shield, Users, BookOpen } from "lucide-react";
+import {
+  Leaf,
+  Mail,
+  Lock,
+  ArrowRight,
+  Shield,
+  Users,
+  BookOpen,
+} from "lucide-react";
 
 type Role = "admin" | "faculty" | "student" | null;
 
@@ -149,7 +157,9 @@ export default function Login() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Password</label>
+                <label className="block text-sm font-medium mb-2">
+                  Password
+                </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <input
@@ -191,7 +201,10 @@ export default function Login() {
             <div className="mt-6 text-center">
               <p className="text-sm text-muted-foreground">
                 Don't have an account?{" "}
-                <a href="#" className="text-primary font-semibold hover:underline">
+                <a
+                  href="#"
+                  className="text-primary font-semibold hover:underline"
+                >
                   Contact your administrator
                 </a>
               </p>

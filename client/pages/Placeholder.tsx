@@ -6,7 +6,10 @@ interface PlaceholderProps {
   description?: string;
 }
 
-export default function Placeholder({ title = "Coming Soon", description = "This page is being developed." }: PlaceholderProps) {
+export default function Placeholder({
+  title = "Coming Soon",
+  description = "This page is being developed.",
+}: PlaceholderProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center py-12 px-4">
       <div className="max-w-md text-center">
@@ -18,7 +21,8 @@ export default function Placeholder({ title = "Coming Soon", description = "This
 
         <div className="p-6 rounded-lg bg-white border border-border mb-6">
           <p className="text-sm text-muted-foreground mb-4">
-            This section is under development. Continue prompting in the chat to help build out this feature!
+            This section is under development. Continue prompting in the chat to
+            help build out this feature!
           </p>
         </div>
 

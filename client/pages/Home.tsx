@@ -25,7 +25,9 @@ export default function Home() {
         <div className="relative z-10 max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
             <Leaf className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">Sustainable Excellence</span>
+            <span className="text-sm font-medium text-primary">
+              Sustainable Excellence
+            </span>
           </div>
 
           <h1 className="text-5xl sm:text-6xl font-bold tracking-tight mb-6">
@@ -36,7 +38,10 @@ export default function Home() {
           </h1>
 
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            The Sustainable Academic Operations Platform transforms educational institutions with efficient, transparent, and eco-friendly digital workflows. Empower administrators, faculty, and students with a unified platform built for the future.
+            The Sustainable Academic Operations Platform transforms educational
+            institutions with efficient, transparent, and eco-friendly digital
+            workflows. Empower administrators, faculty, and students with a
+            unified platform built for the future.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
@@ -77,7 +82,8 @@ export default function Home() {
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4">Powerful Features</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Everything you need to manage academic operations efficiently and sustainably
+            Everything you need to manage academic operations efficiently and
+            sustainably
           </p>
         </div>
 
@@ -141,7 +147,8 @@ export default function Home() {
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">Tailored for Every Role</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Optimized experiences designed for administrators, faculty, and students
+              Optimized experiences designed for administrators, faculty, and
+              students
             </p>
           </div>
 
@@ -217,7 +224,9 @@ export default function Home() {
           <div className="p-8 rounded-lg bg-gradient-to-br from-primary/10 to-accent/10 border border-primary/20">
             <h3 className="text-2xl font-bold mb-4">Paperless Operations</h3>
             <p className="text-muted-foreground mb-6">
-              Eliminate paper waste with fully digital workflows for all academic processes—from assignments to examinations. Track and reduce your institution's environmental footprint.
+              Eliminate paper waste with fully digital workflows for all
+              academic processes—from assignments to examinations. Track and
+              reduce your institution's environmental footprint.
             </p>
             <ul className="space-y-2 text-sm">
               <li className="flex items-center gap-2">
@@ -238,7 +247,9 @@ export default function Home() {
           <div className="p-8 rounded-lg bg-gradient-to-br from-accent/10 to-primary/10 border border-accent/20">
             <h3 className="text-2xl font-bold mb-4">Resource Optimization</h3>
             <p className="text-muted-foreground mb-6">
-              Optimize scheduling to minimize resource usage. Intelligent algorithms reduce conflicts, improve facility utilization, and lower operational costs.
+              Optimize scheduling to minimize resource usage. Intelligent
+              algorithms reduce conflicts, improve facility utilization, and
+              lower operational costs.
             </p>
             <ul className="space-y-2 text-sm">
               <li className="flex items-center gap-2">
@@ -265,7 +276,8 @@ export default function Home() {
             Ready to Transform Your Institution?
           </h2>
           <p className="text-lg opacity-90 mb-8 max-w-2xl mx-auto">
-            Join thousands of educational institutions using SAOP to improve efficiency, enhance transparency, and promote sustainable practices.
+            Join thousands of educational institutions using SAOP to improve
+            efficiency, enhance transparency, and promote sustainable practices.
           </p>
           <Link
             to="/login"

@@ -18,9 +18,12 @@ const NotFound = () => {
       <div className="text-center max-w-md">
         <AlertCircle className="w-16 h-16 text-primary/60 mx-auto mb-4" />
         <h1 className="text-6xl font-bold text-primary mb-2">404</h1>
-        <p className="text-2xl font-bold text-foreground mb-3">Page Not Found</p>
+        <p className="text-2xl font-bold text-foreground mb-3">
+          Page Not Found
+        </p>
         <p className="text-muted-foreground mb-8">
-          The page you're looking for doesn't exist or has been moved. Let's get you back on track.
+          The page you're looking for doesn't exist or has been moved. Let's get
+          you back on track.
         </p>
         <Link
           to="/"
