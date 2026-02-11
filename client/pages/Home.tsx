@@ -15,7 +15,7 @@ import {
 export default function Home() {
   return (
     <div className="space-y-16 pb-16">
-      {/* Hero Section */}
+
       <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-accent/5 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-20 right-10 w-72 h-72 bg-accent/20 rounded-full blur-3xl"></div>
@@ -32,9 +32,10 @@ export default function Home() {
 
           <h1 className="text-5xl sm:text-6xl font-bold tracking-tight mb-6">
             Academic Operations
-            <span className="block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              Reimagined
+            <span className="block pb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            Reimagined
             </span>
+
           </h1>
 
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">

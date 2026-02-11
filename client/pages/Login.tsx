@@ -184,18 +184,7 @@ export default function Login() {
               </button>
             </form>
 
-            {/* Demo Credentials */}
-            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h3 className="font-semibold text-sm mb-2 text-blue-900">
-                Demo Credentials
-              </h3>
-              <p className="text-xs text-blue-700 mb-2">
-                Email: <span className="font-mono">demo@saop.edu</span>
-              </p>
-              <p className="text-xs text-blue-700">
-                Password: <span className="font-mono">demo123</span>
-              </p>
-            </div>
+            
 
             {/* Footer */}
             <div className="mt-6 text-center">
