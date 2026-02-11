@@ -1,11 +1,52 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { Leaf } from "lucide-react";
+import type { AuthenticatedUser } from "@shared/api";
+import {
+  AUTH_CHANGE_EVENT,
+  clearAuthToken,
+  storageKeys,
+} from "@/lib/api";
 
 export default function Layout() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const readUser = () => {
+    if (typeof window === "undefined") return null;
+    const stored = window.localStorage.getItem(storageKeys.user);
+    if (!stored) return null;
+    try {
+      return JSON.parse(stored) as AuthenticatedUser;
+    } catch {
+      return null;
+    }
+  };
+  const [currentUser, setCurrentUser] = useState<AuthenticatedUser | null>(
+    () => readUser(),
+  );
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setCurrentUser(readUser());
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener(AUTH_CHANGE_EVENT, handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener(AUTH_CHANGE_EVENT, handleStorageChange);
+    };
+  }, []);
+
+  const handleSignOut = () => {
+    clearAuthToken();
+    setCurrentUser(null);
+    navigate("/login");
+  };
 
   const isAuthPage = location.pathname === "/login";
   const isDashboard = location.pathname.includes("/dashboard");
+  const isAuthenticated = Boolean(currentUser);
 
   if (isAuthPage) {
     return <Outlet />;
@@ -42,27 +83,27 @@ export default function Layout() {
                   </Link>
                 </>
               )}
-              {isDashboard && (
+              {isDashboard && isAuthenticated && (
                 <>
-                  <Link
-                    to="/login"
+                  <button
+                    onClick={handleSignOut}
                     className="px-4 py-2 rounded-lg bg-red-500 text-white font-medium hover:bg-red-600 text-sm"
                   >
                     Sign Out
-                  </Link>
+                  </button>
                 </>
               )}
             </nav>
 
            
             <div className="md:hidden">
-              {isDashboard ? (
-                <Link
-                  to="/login"
+              {isDashboard && isAuthenticated ? (
+                <button
+                  onClick={handleSignOut}
                   className="px-3 py-1 text-sm rounded-lg bg-red-500 text-white font-medium hover:bg-red-600"
                 >
                   Sign Out
-                </Link>
+                </button>
               ) : (
                 <Link
                   to="/login"

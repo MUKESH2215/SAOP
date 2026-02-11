@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Users,
@@ -12,67 +12,111 @@ import {
   GraduationCap,
   Leaf,
 } from "lucide-react";
+import { adminAPI } from "@/lib/api";
+import { extractApiError, useApiQuery } from "@/hooks/use-api";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
+  const statsQuery = useApiQuery({
+    key: ["admin", "stats"],
+    fn: async () => {
+      const { data } = await adminAPI.getStats();
+      return data;
+    },
+  });
+  const studentsQuery = useApiQuery({
+    key: ["admin", "students"],
+    fn: async () => {
+      const { data } = await adminAPI.getStudents();
+      return data;
+    },
+  });
+  const facultyQuery = useApiQuery({
+    key: ["admin", "faculty"],
+    fn: async () => {
+      const { data } = await adminAPI.getFaculty();
+      return data;
+    },
+  });
+  const activitiesQuery = useApiQuery({
+    key: ["admin", "activities"],
+    fn: async () => {
+      const { data } = await adminAPI.getActivities();
+      return data;
+    },
+  });
 
-  const stats = [
-    {
-      icon: Users,
-      label: "Total Students",
-      value: "3,245",
-      color: "bg-primary/10 text-primary",
-    },
-    {
-      icon: GraduationCap,
-      label: "Faculty Members",
-      value: "287",
-      color: "bg-accent/10 text-accent",
-    },
-    {
-      icon: BookOpen,
-      label: "Active Courses",
-      value: "156",
-      color: "bg-blue-500/10 text-blue-500",
-    },
-    {
-      icon: Leaf,
-      label: "Papers Saved",
-      value: "45.2K",
-      color: "bg-green-500/10 text-green-500",
-    },
-  ];
+  const isLoading =
+    statsQuery.isLoading ||
+    studentsQuery.isLoading ||
+    facultyQuery.isLoading ||
+    activitiesQuery.isLoading;
 
-  const recentActivities = [
-    {
-      id: 1,
-      type: "user",
-      title: "New student enrollment",
-      description: "48 new students enrolled in Spring 2024",
-      timestamp: "2 hours ago",
-    },
-    {
-      id: 2,
-      type: "schedule",
-      title: "Timetable published",
-      description: "Spring 2024 timetable published to all students",
-      timestamp: "5 hours ago",
-    },
-    {
-      id: 3,
-      type: "system",
-      title: "System backup completed",
-      description: "Daily backup of academic records completed successfully",
-      timestamp: "1 day ago",
-    },
-    {
-      id: 4,
-      type: "metric",
-      title: "Sustainability milestone",
-      description: "Reached 95% paperless operations",
-      timestamp: "3 days ago",
-    },
-  ];
+  const error =
+    statsQuery.error ||
+    studentsQuery.error ||
+    facultyQuery.error ||
+    activitiesQuery.error;
+
+  const stats = statsQuery.data || {
+    totalStudents: 0,
+    totalFaculty: 0,
+    activeCourses: 0,
+    papersSaved: 0,
+  };
+
+  const statsCards = useMemo(
+    () => [
+      {
+        icon: Users,
+        label: "Total Students",
+        value: stats.totalStudents.toLocaleString(),
+        color: "bg-primary/10 text-primary",
+      },
+      {
+        icon: GraduationCap,
+        label: "Faculty Members",
+        value: stats.totalFaculty.toLocaleString(),
+        color: "bg-accent/10 text-accent",
+      },
+      {
+        icon: BookOpen,
+        label: "Active Courses",
+        value: stats.activeCourses.toLocaleString(),
+        color: "bg-blue-500/10 text-blue-500",
+      },
+      {
+        icon: Leaf,
+        label: "Papers Saved",
+        value: stats.papersSaved.toLocaleString(),
+        color: "bg-green-500/10 text-green-500",
+      },
+    ],
+    [stats],
+  );
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background text-muted-foreground">
+        Loading admin dashboard...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="p-6 rounded-lg border border-border bg-white shadow-sm max-w-md text-center">
+          <p className="text-red-600 font-semibold mb-2">
+            Unable to load dashboard
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {extractApiError(error)}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const quickActions = [
     { icon: Users, label: "Manage Students", href: "#" },
@@ -109,7 +153,7 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {stats.map((stat, index) => {
+          {statsCards.map((stat, index) => {
             const Icon = stat.icon;
             return (
               <div
@@ -119,7 +163,7 @@ export default function AdminDashboard() {
                 <div className="flex items-center justify-between mb-4">
                   <Icon className={`w-8 h-8 ${stat.color}`} />
                   <span className="text-xs font-medium text-muted-foreground">
-                    This Month
+                    Real-time
                   </span>
                 </div>
                 <h3 className="text-3xl font-bold mb-1">{stat.value}</h3>
@@ -181,22 +225,22 @@ export default function AdminDashboard() {
               <div>
                 <h2 className="text-2xl font-bold mb-6">Recent Activities</h2>
                 <div className="space-y-4">
-                  {recentActivities.map((activity) => (
+                  {activitiesQuery.data?.map((activity, index) => (
                     <div
-                      key={activity.id}
+                      key={`${activity.timestamp}-${index}`}
                       className="p-4 rounded-lg bg-white border border-border hover:shadow-md transition-shadow"
                     >
                       <div className="flex items-start justify-between">
                         <div>
                           <h3 className="font-semibold text-foreground mb-1">
-                            {activity.title}
+                            {activity.details || activity.type}
                           </h3>
                           <p className="text-sm text-muted-foreground">
-                            {activity.description}
+                            {activity.user_name || "System"}
                           </p>
                         </div>
                         <span className="text-xs text-muted-foreground whitespace-nowrap ml-4">
-                          {activity.timestamp}
+                          {new Date(activity.timestamp).toLocaleString()}
                         </span>
                       </div>
                     </div>
@@ -212,28 +256,65 @@ export default function AdminDashboard() {
               <div className="p-6 rounded-lg bg-white border border-border">
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                   <Users className="w-6 h-6 text-primary" />
-                  Student Management
+                  Recent Students
                 </h3>
-                <p className="text-muted-foreground mb-4">
-                  Add, update, and view student records. Import bulk data from
-                  CSV files.
-                </p>
-                <button className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90">
-                  Manage Students
-                </button>
+                <div className="space-y-4">
+                  {studentsQuery.data?.slice(0, 5).map((student) => (
+                    <div
+                      key={student.id}
+                      className="flex items-center justify-between border-b last:border-b-0 pb-3 last:pb-0"
+                    >
+                      <div>
+                        <p className="font-semibold text-sm">
+                          {student.first_name} {student.last_name}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {student.email}
+                        </p>
+                      </div>
+                      <span className="text-xs text-muted-foreground">
+                        {new Date(student.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                  ))}
+                  {!studentsQuery.data?.length && (
+                    <p className="text-sm text-muted-foreground">
+                      No student records found.
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div className="p-6 rounded-lg bg-white border border-border">
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                   <GraduationCap className="w-6 h-6 text-accent" />
-                  Faculty Management
+                  Active Faculty
                 </h3>
-                <p className="text-muted-foreground mb-4">
-                  Manage faculty profiles, assignments, and course allocations.
-                </p>
-                <button className="px-4 py-2 rounded-lg bg-accent text-primary-foreground font-medium hover:bg-accent/90">
-                  Manage Faculty
-                </button>
+                <div className="space-y-4">
+                  {facultyQuery.data?.slice(0, 5).map((faculty) => (
+                    <div
+                      key={faculty.id}
+                      className="flex items-center justify-between border-b last:border-b-0 pb-3 last:pb-0"
+                    >
+                      <div>
+                        <p className="font-semibold text-sm">
+                          {faculty.first_name} {faculty.last_name}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {faculty.email}
+                        </p>
+                      </div>
+                      <span className="text-xs font-medium text-muted-foreground">
+                        {faculty.course_count} courses
+                      </span>
+                    </div>
+                  ))}
+                  {!facultyQuery.data?.length && (
+                    <p className="text-sm text-muted-foreground">
+                      No faculty members to display.
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           )}

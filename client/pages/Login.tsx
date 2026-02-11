@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   Leaf,
   Mail,
@@ -10,18 +9,34 @@ import {
   Users,
   BookOpen,
 } from "lucide-react";
-
-type Role = "admin" | "faculty" | "student" | null;
+import type { UserRole } from "@shared/api";
+import { useToast } from "@/components/ui/use-toast";
+import { extractApiError, useApiMutation } from "@/hooks/use-api";
+import { authAPI, persistAuthUser, setAuthToken } from "@/lib/api";
 
 export default function Login() {
   const navigate = useNavigate();
-  const [selectedRole, setSelectedRole] = useState<Role>(null);
+  const { toast } = useToast();
+  const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const loginMutation = useApiMutation({
+    fn: async ({
+      email: loginEmail,
+      password: loginPassword,
+      role,
+    }: {
+      email: string;
+      password: string;
+      role: UserRole;
+    }) => {
+      const { data } = await authAPI.login(loginEmail, loginPassword, role);
+      return data;
+    },
+  });
 
-  const handleRoleSelection = (role: Role) => {
+  const handleRoleSelection = (role: UserRole) => {
     setSelectedRole(role);
     setError("");
   };
@@ -39,22 +54,33 @@ export default function Login() {
       return;
     }
 
-    setIsLoading(true);
     setError("");
 
-    // Simulate login - in a real app, this would call an API
-    setTimeout(() => {
-      setIsLoading(false);
-      // Redirect based on role
-      if (selectedRole === "admin") {
-        navigate("/admin/dashboard");
-      } else if (selectedRole === "faculty") {
-        navigate("/faculty/dashboard");
-      } else {
-        navigate("/student/dashboard");
-      }
-    }, 800);
+    try {
+      const data = await loginMutation.mutateAsync({
+        email,
+        password,
+        role: selectedRole,
+      });
+      setAuthToken(data.token);
+      persistAuthUser(data.user);
+
+      toast({
+        title: "Signed in successfully",
+        description: `Welcome back, ${data.user.firstName}!`,
+      });
+
+      navigate(`/${data.user.role}/dashboard`);
+    } catch (mutationError) {
+      setError(extractApiError(mutationError));
+    }
   };
+  const isLoading = loginMutation.isPending;
+  const apiError =
+    loginMutation.error && !error
+      ? extractApiError(loginMutation.error)
+      : null;
+  const displayError = error || apiError || "";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -106,7 +132,7 @@ export default function Login() {
                   return (
                     <button
                       key={role.id}
-                      onClick={() => handleRoleSelection(role.id as Role)}
+                      onClick={() => handleRoleSelection(role.id as UserRole)}
                       className={`w-full p-4 rounded-lg border-2 transition-all text-left group ${
                         isSelected
                           ? "border-primary bg-primary/5"
@@ -136,9 +162,9 @@ export default function Login() {
 
             {/* Login Form */}
             <form onSubmit={handleLogin} className="space-y-4">
-              {error && (
+              {displayError && (
                 <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-                  {error}
+                  {displayError}
                 </div>
               )}
 

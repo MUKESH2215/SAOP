@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   BookOpen,
   FileText,
@@ -9,98 +9,89 @@ import {
   CheckCircle,
   Plus,
 } from "lucide-react";
+import { extractApiError, useApiQuery } from "@/hooks/use-api";
+import { facultyAPI } from "@/lib/api";
 
 export default function FacultyDashboard() {
   const [activeTab, setActiveTab] = useState("courses");
+  const statsQuery = useApiQuery({
+    key: ["faculty", "stats"],
+    fn: async () => {
+      const { data } = await facultyAPI.getStats();
+      return data;
+    },
+  });
+  const coursesQuery = useApiQuery({
+    key: ["faculty", "courses"],
+    fn: async () => {
+      const { data } = await facultyAPI.getCourses();
+      return data;
+    },
+  });
+  const submissionsQuery = useApiQuery({
+    key: ["faculty", "submissions"],
+    fn: async () => {
+      const { data } = await facultyAPI.getSubmissions();
+      return data;
+    },
+  });
 
-  const courses = [
-    {
-      id: 1,
-      code: "CS101",
-      name: "Introduction to Computer Science",
-      students: 85,
-      assignments: 4,
-      submissions: 73,
-    },
-    {
-      id: 2,
-      code: "CS201",
-      name: "Data Structures",
-      students: 62,
-      assignments: 5,
-      submissions: 58,
-    },
-    {
-      id: 3,
-      code: "CS301",
-      name: "Algorithms",
-      students: 48,
-      assignments: 3,
-      submissions: 45,
-    },
-  ];
+  const isLoading =
+    statsQuery.isLoading || coursesQuery.isLoading || submissionsQuery.isLoading;
+  const error = statsQuery.error || coursesQuery.error || submissionsQuery.error;
 
-  const recentSubmissions = [
-    {
-      id: 1,
-      student: "Sarah Johnson",
-      course: "CS101",
-      assignment: "Assignment 2: Variables",
-      submitted: "2 hours ago",
-      status: "submitted",
-    },
-    {
-      id: 2,
-      student: "Michael Chen",
-      course: "CS201",
-      assignment: "Project 1: Array Implementation",
-      submitted: "4 hours ago",
-      status: "submitted",
-    },
-    {
-      id: 3,
-      student: "Emma Davis",
-      course: "CS101",
-      assignment: "Quiz 3",
-      submitted: "1 day ago",
-      status: "graded",
-    },
-    {
-      id: 4,
-      student: "James Wilson",
-      course: "CS301",
-      assignment: "Algorithm Analysis",
-      submitted: "2 days ago",
-      status: "submitted",
-    },
-  ];
+  const statsCards = useMemo(() => {
+    const stats = statsQuery.data;
+    return [
+      {
+        icon: BookOpen,
+        label: "Active Courses",
+        value: stats?.activeCourses ?? 0,
+        color: "bg-primary/10 text-primary",
+      },
+      {
+        icon: Users,
+        label: "Total Students",
+        value: stats?.totalStudents ?? 0,
+        color: "bg-accent/10 text-accent",
+      },
+      {
+        icon: FileText,
+        label: "Pending Submissions",
+        value: stats?.pendingSubmissions ?? 0,
+        color: "bg-blue-500/10 text-blue-500",
+      },
+      {
+        icon: CheckCircle,
+        label: "Graded",
+        value: stats?.graded ?? 0,
+        color: "bg-green-500/10 text-green-500",
+      },
+    ];
+  }, [statsQuery.data]);
 
-  const stats = [
-    {
-      icon: BookOpen,
-      label: "Active Courses",
-      value: courses.length,
-      color: "bg-primary/10 text-primary",
-    },
-    {
-      icon: Users,
-      label: "Total Students",
-      value: courses.reduce((sum, c) => sum + c.students, 0),
-      color: "bg-accent/10 text-accent",
-    },
-    {
-      icon: FileText,
-      label: "Pending Submissions",
-      value: 28,
-      color: "bg-blue-500/10 text-blue-500",
-    },
-    {
-      icon: CheckCircle,
-      label: "Graded",
-      value: 142,
-      color: "bg-green-500/10 text-green-500",
-    },
-  ];
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background text-muted-foreground">
+        Loading faculty dashboard...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="p-6 rounded-lg border border-border bg-white shadow-sm max-w-md text-center">
+          <p className="text-red-600 font-semibold mb-2">
+            Unable to load faculty data
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {extractApiError(error)}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -128,7 +119,7 @@ export default function FacultyDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {stats.map((stat, index) => {
+          {statsCards.map((stat, index) => {
             const Icon = stat.icon;
             return (
               <div
@@ -138,7 +129,11 @@ export default function FacultyDashboard() {
                 <div className="flex items-center justify-between mb-4">
                   <Icon className={`w-8 h-8 ${stat.color}`} />
                 </div>
-                <h3 className="text-3xl font-bold mb-1">{stat.value}</h3>
+                <h3 className="text-3xl font-bold mb-1">
+                  {stat.value.toLocaleString
+                    ? stat.value.toLocaleString()
+                    : stat.value}
+                </h3>
                 <p className="text-sm text-muted-foreground">{stat.label}</p>
               </div>
             );
@@ -172,7 +167,7 @@ export default function FacultyDashboard() {
           {/* Courses Tab */}
           {activeTab === "courses" && (
             <div className="space-y-4">
-              {courses.map((course) => (
+              {coursesQuery.data?.map((course) => (
                 <div
                   key={course.id}
                   className="p-6 rounded-lg bg-white border border-border hover:shadow-lg transition-shadow"
@@ -180,10 +175,10 @@ export default function FacultyDashboard() {
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <div className="text-sm font-semibold text-primary mb-1">
-                        {course.code}
+                        {course.course_code}
                       </div>
                       <h3 className="text-xl font-bold text-foreground">
-                        {course.name}
+                        {course.course_name}
                       </h3>
                     </div>
                     <button className="px-4 py-2 rounded-lg bg-primary/10 text-primary font-medium hover:bg-primary/20">
@@ -198,7 +193,9 @@ export default function FacultyDashboard() {
                         <div className="text-xs text-muted-foreground">
                           Students
                         </div>
-                        <div className="font-semibold">{course.students}</div>
+                        <div className="font-semibold">
+                          {course.students ?? 0}
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -208,7 +205,7 @@ export default function FacultyDashboard() {
                           Assignments
                         </div>
                         <div className="font-semibold">
-                          {course.assignments}
+                          {course.assignments ?? 0}
                         </div>
                       </div>
                     </div>
@@ -219,20 +216,25 @@ export default function FacultyDashboard() {
                           Submissions
                         </div>
                         <div className="font-semibold">
-                          {course.submissions}
+                          {course.submissions ?? 0}
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               ))}
+              {!coursesQuery.data?.length && (
+                <div className="p-6 rounded-lg bg-white border border-border text-center text-muted-foreground">
+                  You have not created any courses yet.
+                </div>
+              )}
             </div>
           )}
 
           {/* Submissions Tab */}
           {activeTab === "submissions" && (
             <div className="space-y-4">
-              {recentSubmissions.map((submission) => (
+              {submissionsQuery.data?.map((submission) => (
                 <div
                   key={submission.id}
                   className="p-6 rounded-lg bg-white border border-border hover:shadow-md transition-shadow"
@@ -240,10 +242,10 @@ export default function FacultyDashboard() {
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <h3 className="font-semibold text-foreground">
-                        {submission.student}
+                        {submission.student_name}
                       </h3>
                       <div className="text-sm text-muted-foreground mt-1">
-                        {submission.course} - {submission.assignment}
+                        {submission.course_code} - {submission.assignment_title}
                       </div>
                     </div>
                     <span
@@ -258,7 +260,9 @@ export default function FacultyDashboard() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">
-                      {submission.submitted}
+                      {submission.submitted_at
+                        ? new Date(submission.submitted_at).toLocaleString()
+                        : "Pending submission"}
                     </span>
                     <button className="text-sm font-medium text-primary hover:text-primary/80">
                       Review
@@ -266,6 +270,11 @@ export default function FacultyDashboard() {
                   </div>
                 </div>
               ))}
+              {!submissionsQuery.data?.length && (
+                <div className="p-6 rounded-lg bg-white border border-border text-center text-muted-foreground">
+                  No recent submissions found.
+                </div>
+              )}
             </div>
           )}
 
