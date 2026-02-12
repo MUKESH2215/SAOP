@@ -17,7 +17,7 @@ import type {
 
 const API_BASE_URL =
   (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, "") ||
-  "http://localhost:3000/api";
+  "/api";
 
 const AUTH_TOKEN_KEY = "authToken";
 const AUTH_USER_KEY = "user";

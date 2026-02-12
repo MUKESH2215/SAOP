@@ -11,8 +11,8 @@ router.post('/login', async (req: Request, res: Response) => {
     const { email, password, role } = req.body;
 
     if (!email || !password || !role) {
-      return res.status(400).json({ 
-        error: 'Email, password, and role are required' 
+      return res.status(400).json({
+        error: 'Email, password, and role are required'
       });
     }
 
@@ -28,10 +28,25 @@ router.post('/login', async (req: Request, res: Response) => {
 
     const user = users[0];
 
-    // For demo purposes, accept "demo123" as password
-    // In production, always use bcrypt.compare
-    const isPasswordValid = password === 'demo123' || 
-      await bcrypt.compare(password, user.password_hash);
+
+    // For demo purposes, accept plain text password or bcrypt hash
+    // This allows both demo credentials and properly hashed passwords
+    let isPasswordValid = false;
+
+    // Check for demo password or plain text match
+    if (password === 'demo123' || password === user.password_hash) {
+      isPasswordValid = true;
+    } else {
+      // Try bcrypt comparison (only if password_hash looks like a bcrypt hash)
+      try {
+        if (user.password_hash && user.password_hash.startsWith('$2')) {
+          isPasswordValid = await bcrypt.compare(password, user.password_hash);
+        }
+      } catch (err) {
+        // If bcrypt comparison fails, password is invalid
+        console.error('Bcrypt comparison error:', err);
+      }
+    }
 
     if (!isPasswordValid) {
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -104,7 +119,7 @@ router.post('/register', async (req: Request, res: Response) => {
 // Verify token endpoint
 router.get('/verify', async (req: Request, res: Response) => {
   const token = req.headers.authorization?.split(' ')[1];
-  
+
   if (!token) {
     return res.status(401).json({ error: 'No token provided' });
   }
@@ -113,10 +128,10 @@ router.get('/verify', async (req: Request, res: Response) => {
     const jwt = require('jsonwebtoken');
     const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
     const decoded = jwt.verify(token, JWT_SECRET);
-    
-    res.json({ 
-      success: true, 
-      user: decoded 
+
+    res.json({
+      success: true,
+      user: decoded
     });
   } catch (error) {
     res.status(401).json({ error: 'Invalid token' });
