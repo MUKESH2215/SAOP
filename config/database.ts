@@ -1,43 +1,34 @@
-import mysql from 'mysql2/promise';
+import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Database connection pool configuration
-const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'saop_db',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  enableKeepAlive: true,
-  keepAliveInitialDelay: 0
-});
+// MongoDB connection configuration
+const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/saop';
 
-// Test database connection
-export const testConnection = async () => {
+// Connect to MongoDB
+export const connectDB = async () => {
   try {
-    const connection = await pool.getConnection();
-    console.log('✅ Database connected successfully');
-    connection.release();
+    await mongoose.connect(mongoUri);
+    console.log('✅ MongoDB connected successfully');
     return true;
   } catch (error) {
-    console.error('❌ Database connection failed:', error);
+    console.error('❌ MongoDB connection failed:', error);
     return false;
   }
 };
 
-// Execute query helper
-export const query = async (sql: string, params?: any[]) => {
+// Test database connection
+export const testConnection = async () => {
   try {
-    const [results] = await pool.execute(sql, params);
-    return results;
+    const connection = await mongoose.connect(mongoUri);
+    console.log('✅ Database connection test successful');
+    await mongoose.disconnect();
+    return true;
   } catch (error) {
-    console.error('Query error:', error);
-    throw error;
+    console.error('❌ Database connection test failed:', error);
+    return false;
   }
 };
 
-export default pool;
+export default mongoose;
